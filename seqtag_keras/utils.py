@@ -24,7 +24,7 @@ def download(url):
     return weights_file, params_file, preprocessor_file
 
 
-def load_data_and_labels(filename, encoding='utf-8'):
+def load_conll(filename, encoding='utf-8', separator=None):
     """Loads data and label from a file.
 
     Args:
@@ -64,7 +64,11 @@ def load_data_and_labels(filename, encoding='utf-8'):
         for line in f:
             line = line.rstrip()
             if line:
-                word, tag = line.split('\t')
+                if not separator:
+                    word, tag = line.split()
+                else:
+                    word, tag = line.split(separator)
+
                 words.append(word)
                 tags.append(tag)
             else:
