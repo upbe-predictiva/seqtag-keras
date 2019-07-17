@@ -10,7 +10,7 @@ from sklearn.externals import joblib
 from keras.utils.np_utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
 
-from anago.utils import Vocabulary
+from seqtag_keras.utils import Vocabulary
 
 
 def normalize_number(text):

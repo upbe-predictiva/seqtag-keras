@@ -1,7 +1,7 @@
 """Training-related module.
 """
-from anago.callbacks import F1score
-from anago.utils import NERSequence
+from seqtag_keras.callbacks import F1score
+from seqtag_keras.utils import NERSequence
 
 
 class Trainer(object):

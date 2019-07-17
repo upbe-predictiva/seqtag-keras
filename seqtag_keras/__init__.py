@@ -1,3 +1,3 @@
-from anago.tagger import Tagger
-from anago.trainer import Trainer
-from anago.wrapper import Sequence
+from seqtag_keras.tagger import Tagger
+from seqtag_keras.trainer import Trainer
+from seqtag_keras.wrapper import Sequence

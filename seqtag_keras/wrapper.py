@@ -3,11 +3,11 @@ Wrapper class.
 """
 from seqeval.metrics import f1_score
 
-from anago.models import BiLSTMCRF, save_model, load_model
-from anago.preprocessing import IndexTransformer
-from anago.tagger import Tagger
-from anago.trainer import Trainer
-from anago.utils import filter_embeddings
+from seqtag_keras.models import BiLSTMCRF, save_model, load_model
+from seqtag_keras.preprocessing import IndexTransformer
+from seqtag_keras.tagger import Tagger
+from seqtag_keras.trainer import Trainer
+from seqtag_keras.utils import filter_embeddings
 
 
 class Sequence(object):
