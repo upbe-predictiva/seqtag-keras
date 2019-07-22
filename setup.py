@@ -17,12 +17,13 @@ DESCRIPTION = 'Easy to use BiLSTM+CRF sequence tagging for text.'
 URL = 'https://github.com/bedapudi6788/seqtag-keras'
 EMAIL = 'praneethbedapudi@gmail.com'
 AUTHOR = 'BEDAPUDI PRANEETH'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '1.0.0'
+REQUIRES_PYTHON = '>=3.5.0'
+VERSION = '1.0.1'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'Keras>=2.2.0', 'h5py>=2.7.1', 'scikit-learn==0.19.1',
+    'Keras>=2.2.0',
+    'scikit-learn==0.19.1',
     'seqeval==0.0.3'
 ]
 
