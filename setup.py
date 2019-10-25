@@ -18,12 +18,12 @@ URL = 'https://github.com/bedapudi6788/seqtag-keras'
 EMAIL = 'praneethbedapudi@gmail.com'
 AUTHOR = 'BEDAPUDI PRANEETH'
 REQUIRES_PYTHON = '>=3.5.0'
-VERSION = '1.0.4'
+VERSION = '1.0.5'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
     'Keras',
-    'scikit-learn==0.19.1',
+    'scikit-learn',
     'seqeval==0.0.3'
 ]
 
