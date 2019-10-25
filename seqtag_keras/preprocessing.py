@@ -6,7 +6,7 @@ import re
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.externals import joblib
+import pickle
 from keras.utils.np_utils import to_categorical
 from keras.preprocessing.sequence import pad_sequences
 
@@ -153,11 +153,11 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
         return len(self._label_vocab)
 
     def save(self, file_path):
-        joblib.dump(self, file_path)
+        pickle.dump(self, open(file_path, 'wb'))
 
     @classmethod
     def load(cls, file_path):
-        p = joblib.load(file_path)
+        p = pickle.load(open(file_path, 'rb'))
 
         return p
 
