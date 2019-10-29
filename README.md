@@ -8,7 +8,8 @@ This repo is a fork of https://github.com/Hironsan/anago and is modified to suit
 
 The purpose of creating a fork (and a separate module) instead of using the excellent anago is as follows.
 
-1. Anago's installation comes with ELMo, allennlp and some other stuff, which are not needed for the intended use cases of this repo (mainly DeepSegment). 
-2. It's not easy to include a git repo link as a requirement in setup.py while publishing to PyPi. So, this module is renamed to seqtag-keras.
+1.  **Maintain compatibility with newer tf and keras versions.**
+2. Anago's installation comes with ELMo, allennlp and some other stuff, which are not needed for the intended use cases of this repo (mainly DeepSegment).
+3. It's not easy to include a git repo link as a requirement in setup.py while publishing to PyPi. So, this module is renamed to seqtag-keras.
 
 **Full credit and thanks for the original implementation of this repo goes to https://github.com/Hironsan/ and https://github.com/chakki-works/ . **
