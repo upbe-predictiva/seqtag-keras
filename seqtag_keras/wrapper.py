@@ -3,7 +3,7 @@ Wrapper class.
 """
 from seqeval.metrics import f1_score
 
-from seqtag_keras.models import BiLSTMCRF, save_model, load_model
+from seqtag_keras.models import BiLSTMCRF, load_model, save_model
 from seqtag_keras.preprocessing import IndexTransformer
 from seqtag_keras.tagger import Tagger
 from seqtag_keras.trainer import Trainer
@@ -61,6 +61,7 @@ class Sequence(object):
             shuffle: Boolean (whether to shuffle the training data
                 before each epoch). `shuffle` will default to True.
         """
+        # self.use_char = False
         p = IndexTransformer(initial_vocab=self.initial_vocab, use_char=self.use_char)
         p.fit(x_train, y_train)
         embeddings = filter_embeddings(self.embeddings, p._word_vocab.vocab, self.word_embedding_dim)
@@ -77,8 +78,8 @@ class Sequence(object):
                           embeddings=embeddings,
                           use_char=self.use_char,
                           use_crf=self.use_crf)
-        model, loss = model.build()
-        model.compile(loss=loss, optimizer=self.optimizer)
+        model = model.build()
+        model.compile(optimizer=self.optimizer)
 
         trainer = Trainer(model, preprocessor=p)
         trainer.train(x_train, y_train, x_valid, y_valid,
@@ -105,7 +106,7 @@ class Sequence(object):
             x_test = self.p.transform(x_test)
             y_pred = self.model.predict(x_test)
             y_pred = self.p.inverse_transform(y_pred, lengths)
-            return y_pred 
+            return y_pred
         else:
             raise OSError('Could not find a model. Call load(dir_path).')
 

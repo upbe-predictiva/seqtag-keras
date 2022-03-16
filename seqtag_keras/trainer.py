@@ -44,8 +44,8 @@ class Trainer(object):
             f1 = F1score(valid_seq, preprocessor=self._preprocessor)
             callbacks = [f1] + callbacks if callbacks else [f1]
 
-        self._model.fit_generator(generator=train_seq,
-                                  epochs=epochs,
-                                  callbacks=callbacks,
-                                  verbose=verbose,
-                                  shuffle=shuffle)
+        self._model.fit(train_seq,
+                        epochs=epochs,
+                        callbacks=callbacks,
+                        verbose=verbose,
+                        shuffle=shuffle)

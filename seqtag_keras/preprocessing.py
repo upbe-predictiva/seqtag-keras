@@ -2,13 +2,12 @@
 """
 Preprocessors.
 """
+import pickle
 import re
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
-import pickle
-from keras.utils.np_utils import to_categorical
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 from seqtag_keras.utils import Vocabulary
 
@@ -96,14 +95,6 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
         if y is not None:
             y = [self._label_vocab.doc2id(doc) for doc in y]
             y = pad_sequences(y, padding='post')
-            y = to_categorical(y, self.label_size).astype(int)
-            # In 2018/06/01, to_categorical is a bit strange.
-            # >>> to_categorical([[1,3]], num_classes=4).shape
-            # (1, 2, 4)
-            # >>> to_categorical([[1]], num_classes=4).shape
-            # (1, 4)
-            # So, I expand dimensions when len(y.shape) == 2.
-            y = y if len(y.shape) == 3 else np.expand_dims(y, axis=0)
             return features, y
         else:
             return features
@@ -133,7 +124,6 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
         Returns:
             list: list of list of strings.
         """
-        y = np.argmax(y, -1)
         inverse_y = [self._label_vocab.id2doc(ids) for ids in y]
         if lengths is not None:
             inverse_y = [iy[:l] for iy, l in zip(inverse_y, lengths)]

@@ -3,11 +3,11 @@ Model definition.
 """
 import json
 
-from keras.layers import Dense, LSTM, Bidirectional, Embedding, Input, Dropout, TimeDistributed
-from keras.layers.merge import Concatenate
-from keras.models import Model, model_from_json
-
-from seqtag_keras.layers import CRF
+from tensorflow.keras.layers import (LSTM, Bidirectional, Dense, Dropout,
+                                     Embedding, Input, TimeDistributed,
+                                     concatenate)
+from tensorflow.keras.models import Model, model_from_json
+from tensorflow_addons.text.crf_wrapper import CRFModelWrapper
 
 
 def save_model(model, weights_file, params_file):
@@ -103,20 +103,12 @@ class BiLSTMCRF(object):
                                         mask_zero=True,
                                         name='char_embedding')(char_ids)
             char_embeddings = TimeDistributed(Bidirectional(LSTM(self._char_lstm_size)))(char_embeddings)
-            word_embeddings = Concatenate()([word_embeddings, char_embeddings])
+            word_embeddings = concatenate([word_embeddings, char_embeddings])
 
         word_embeddings = Dropout(self._dropout)(word_embeddings)
         z = Bidirectional(LSTM(units=self._word_lstm_size, return_sequences=True))(word_embeddings)
         z = Dense(self._fc_dim, activation='tanh')(z)
 
-        if self._use_crf:
-            crf = CRF(self._num_labels, sparse_target=False)
-            loss = crf.loss_function
-            pred = crf(z)
-        else:
-            loss = 'categorical_crossentropy'
-            pred = Dense(self._num_labels, activation='softmax')(z)
+        base_model = Model(inputs=inputs, outputs=z)
 
-        model = Model(inputs=inputs, outputs=pred)
-
-        return model, loss
+        return CRFModelWrapper(base_model, self._num_labels)

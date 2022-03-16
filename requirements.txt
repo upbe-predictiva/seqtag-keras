@@ -1,0 +1,4 @@
+scikit-learn==1.0.2
+seqeval==0.0.3
+tensorflow==2.7.0
+tensorflow-addons==0.15.0

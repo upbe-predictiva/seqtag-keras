@@ -1,9 +1,8 @@
 """
 Custom callbacks.
 """
-import numpy as np
-from keras.callbacks import Callback
-from seqeval.metrics import f1_score, classification_report
+from seqeval.metrics import classification_report, f1_score
+from tensorflow.keras.callbacks import Callback
 
 
 class F1score(Callback):
@@ -15,7 +14,7 @@ class F1score(Callback):
 
     def get_lengths(self, y_true):
         lengths = []
-        for y in np.argmax(y_true, -1):
+        for y in y_true:
             try:
                 i = list(y).index(0)
             except ValueError:
