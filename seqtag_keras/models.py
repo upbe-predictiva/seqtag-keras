@@ -14,13 +14,13 @@ def save_model(model, weights_file, params_file):
     with open(params_file, 'w') as f:
         params = model.to_json()
         json.dump(json.loads(params), f, sort_keys=True, indent=4)
-        model.save_weights(weights_file)
+    model.save_weights(weights_file)
 
 
 def load_model(weights_file, params_file):
     with open(params_file) as f:
-        model = model_from_json(f.read(), custom_objects={'CRF': CRF})
-        model.load_weights(weights_file)
+        model = model_from_json(f.read(), custom_objects={'CRFModelWrapper': CRFModelWrapper})
+    model.load_weights(weights_file)
 
     return model
 

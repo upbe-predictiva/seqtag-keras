@@ -154,6 +154,9 @@ class Sequence(object):
         self.p.save(preprocessor_file)
         save_model(self.model, weights_file, params_file)
 
+    def get_transformer_and_model(self):
+        return self.p, self.model
+
     @classmethod
     def load(cls, weights_file, params_file, preprocessor_file):
         self = cls()
