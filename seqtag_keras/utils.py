@@ -6,6 +6,7 @@ import os
 from collections import Counter
 
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras.utils import Sequence, get_file
 
 
@@ -125,6 +126,7 @@ class Vocabulary(object):
         self._token2id = {token: i for i, token in enumerate(specials)}
         self._id2token = list(specials)
         self._token_count = Counter()
+        self._tf_token2id = None
 
     def __len__(self):
         return len(self._token2id)
@@ -187,6 +189,18 @@ class Vocabulary(object):
             self._token2id[unk] = idx
             self._id2token.append(unk)
 
+        self.build_tf_token2id()
+
+    def build_tf_token2id(self):
+        self._tf_token2id = tf.lookup.StaticHashTable(
+            initializer=tf.lookup.KeyValueTensorInitializer(
+                keys=tf.constant(list(self._token2id.keys())),
+                values=tf.constant(list(self._token2id.values())),
+            ),
+            default_value=tf.constant(len(self._token2id) - 1),
+            name="token2id"
+        )
+
     def process_token(self, token):
         """Process token before following methods:
         * add_token
@@ -216,6 +230,17 @@ class Vocabulary(object):
         """
         token = self.process_token(token)
         return self._token2id.get(token, len(self._token2id) - 1)
+
+    def tf_token_to_id(self, token):
+        """Get the token_id of given token.
+
+        Args:
+            token (str): token from vocabulary.
+
+        Returns:
+            int: int id of token.
+        """
+        return self._tf_token2id.lookup(token)
 
     def id_to_token(self, idx):
         """token-id to token (string).

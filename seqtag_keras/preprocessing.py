@@ -6,6 +6,8 @@ import pickle
 import re
 
 import numpy as np
+import tensorflow as tf
+from pyparsing import Word
 from sklearn.base import BaseEstimator, TransformerMixin
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
@@ -28,7 +30,7 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
     """
 
     def __init__(self, lower=True, num_norm=True,
-                 use_char=True, initial_vocab=None):
+                 use_char=True, initial_vocab=None, tags=[]):
         """Create a preprocessor object.
 
         Args:
@@ -42,6 +44,7 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
         self._word_vocab = Vocabulary(lower=lower)
         self._char_vocab = Vocabulary(lower=False)
         self._label_vocab = Vocabulary(lower=False, unk_token=False)
+        self._tags = tags
 
         if initial_vocab:
             self._word_vocab.add_documents([initial_vocab])
@@ -99,6 +102,22 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
         else:
             return features
 
+    def transform_tf(self, X, y=None):
+        """Transform documents to document ids.
+
+        Uses the vocabulary learned by fit.
+
+        Args:
+            X : iterable
+            an iterable which yields either str, unicode or file objects.
+            y : iterabl, label strings.
+
+        Returns:
+            features: document id matrix.
+            y: label id matrix.
+        """
+        return self._word_vocab.tf_token_to_id(X)
+
     def fit_transform(self, X, y=None, **params):
         """Learn vocabulary and return document id matrix.
 
@@ -130,6 +149,9 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
 
         return inverse_y
 
+    def inverse_transform_tf(self, y):
+        return [self._tags[y_i] for y_i in y]
+
     @property
     def word_vocab_size(self):
         return len(self._word_vocab)
@@ -148,6 +170,20 @@ class IndexTransformer(BaseEstimator, TransformerMixin):
     @classmethod
     def load(cls, file_path):
         p = pickle.load(open(file_path, 'rb'))
+
+        return p
+
+    def save_tf(self, file_path):
+        self._char_vocab._tf_token2id = None
+        self._label_vocab._tf_token2id = None
+        self._word_vocab._tf_token2id = None
+        pickle.dump(self, open(file_path, 'wb'))
+        self._word_vocab.build_tf_token2id()
+
+    @classmethod
+    def load_tf(cls, file_path):
+        p = pickle.load(open(file_path, 'rb'))
+        p._word_vocab.build_tf_token2id()
 
         return p
 
